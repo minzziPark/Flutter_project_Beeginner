@@ -1,4 +1,4 @@
-import 'package:beeginner/home.dart';
+import 'package:beeginner/todo.dart';
 import 'package:beeginner/login.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +12,7 @@ class BeeginnerApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (BuildContext context) => const LoginPage(),
-        '/': (BuildContext context) => const HomePage(),
+        '/': (BuildContext context) => const TodoPage(),
       },
       theme: ThemeData.light(useMaterial3: true),
     );

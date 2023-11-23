@@ -25,14 +25,28 @@ class ApplicationState extends ChangeNotifier {
 
   bool _loggedIn = false;
   bool get loggedIn => _loggedIn;
+  bool _emailVerified = false;
+  bool get emailVerified => _emailVerified;
 
   Future<void> init() async {
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
         _loggedIn = true;
+        _emailVerified = true;
       } else {
         _loggedIn = false;
+        _emailVerified = false;
       }
+      notifyListeners();
     });
+  }
+
+  Future<void> refreshLoggedInUser() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      return;
+    }
+    await currentUser.reload();
   }
 }
