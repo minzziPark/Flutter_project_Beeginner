@@ -1,3 +1,5 @@
+import 'package:beeginner/schedule.dart';
+import 'package:beeginner/tip.dart';
 import 'package:beeginner/todo.dart';
 import 'package:beeginner/login.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,8 @@ class BeeginnerApp extends StatelessWidget {
       routes: {
         '/login': (BuildContext context) => const LoginPage(),
         '/': (BuildContext context) => const TodoPage(),
+        '/schedule': (BuildContext context) => const SchedulePage(),
+        '/tip': (BuildContext context) => const TipPage(),
       },
       theme: ThemeData.light(useMaterial3: true),
     );

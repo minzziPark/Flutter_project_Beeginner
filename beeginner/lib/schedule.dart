@@ -3,17 +3,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:timer_builder/timer_builder.dart';
 
-// import 'components/appbar.dart';
-// import 'components/getday.dart';
-
-class TodoPage extends StatefulWidget {
-  const TodoPage({super.key});
+class SchedulePage extends StatefulWidget {
+  const SchedulePage({super.key});
 
   @override
-  State<TodoPage> createState() => _TodoPageState();
+  State<SchedulePage> createState() => _SchedulePageState();
 }
 
-class _TodoPageState extends State<TodoPage> {
+class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +38,8 @@ class _TodoPageState extends State<TodoPage> {
                       border: Border(
                         bottom: BorderSide(
                           color: Color.fromRGBO(
-                              255, 226, 12, 1), // 아래 border 색상 설정
-                          width: 3.0, // 아래 border 두께 설정
+                              230, 224, 233, 1), // 아래 border 색상 설정
+                          width: 0.1, // 아래 border 두께 설정
                         ),
                       ),
                     ),
@@ -51,7 +48,9 @@ class _TodoPageState extends State<TodoPage> {
                         '오늘의 할 일',
                         style: TextStyle(color: Colors.black),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/');
+                      },
                     ),
                   ),
                 ),
@@ -62,8 +61,8 @@ class _TodoPageState extends State<TodoPage> {
                       border: Border(
                         bottom: BorderSide(
                           color: Color.fromRGBO(
-                              230, 224, 233, 1), // 아래 border 색상 설정
-                          width: 0.1, // 아래 border 두께 설정
+                              255, 226, 12, 1), // 아래 border 색상 설정
+                          width: 3.0, // 아래 border 두께 설정
                         ),
                       ),
                     ),
@@ -72,9 +71,7 @@ class _TodoPageState extends State<TodoPage> {
                         '일정표',
                         style: TextStyle(color: Colors.black),
                       ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/schedule');
-                      },
+                      onPressed: () {},
                     ),
                   ),
                 ),
