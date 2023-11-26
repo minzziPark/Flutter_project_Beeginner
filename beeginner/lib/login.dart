@@ -1,4 +1,4 @@
-import 'dart:async';
+// import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -39,21 +39,21 @@ class _LoginPageState extends State<LoginPage> {
               controller: _userEmailController,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Color.fromARGB(255, 255, 255, 255),
+                fillColor: const Color.fromARGB(255, 255, 255, 255),
                 labelText: '이메일',
-                prefixIcon: Icon(Icons.email_outlined,
+                prefixIcon: const Icon(Icons.email_outlined,
                     color: Color.fromARGB(255, 145, 145, 145)),
                 labelStyle:
-                    TextStyle(color: Color.fromARGB(255, 145, 145, 145)),
+                    const TextStyle(color: Color.fromARGB(255, 145, 145, 145)),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                     color: Colors.black,
                     width: 0.7,
                   ), // 텍스트 필드가 포커싱되었을 때 테두리 색상
                   borderRadius: BorderRadius.circular(5.0), // 테두리의 radius
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                     color: Color.fromARGB(255, 145, 145, 145),
                     width: 0.7,
                   ), // 텍스트 필드가 활성화되었을 때 테두리 색상
@@ -69,12 +69,12 @@ class _LoginPageState extends State<LoginPage> {
                 filled: true,
                 fillColor: Color.fromARGB(255, 255, 255, 255),
                 labelText: '비밀번호',
-                prefixIcon: Icon(Icons.lock_outlined,
+                prefixIcon: const Icon(Icons.lock_outlined,
                     color: Color.fromARGB(255, 145, 145, 145)),
                 labelStyle:
-                    TextStyle(color: Color.fromARGB(255, 145, 145, 145)),
+                    const TextStyle(color: Color.fromARGB(255, 145, 145, 145)),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                     color: Colors.black,
                     width: 0.7,
                   ), // 텍스트 필드가 포커싱되었을 때 테두리 색상
@@ -102,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 onPressed: () async {
                   try {
+                    // ignore: unused_local_variable
                     UserCredential userCredential = await FirebaseAuth.instance
                         .signInWithEmailAndPassword(
                             email: _userEmailController.text,
@@ -151,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 1, // 텍스트 버튼 폭 설정
                   child: Text('|'),
                 ),
@@ -167,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 1, // 텍스트 버튼 폭 설정
                   child: Text('|'),
                 ),
