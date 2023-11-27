@@ -15,6 +15,8 @@ import 'package:beeginner/main.dart';
 class TodoPage extends StatelessWidget {
   const TodoPage({Key? key}) : super(key: key);
 
+  static const int numlist = 1;
+
   List<Card> _buildGridCards(BuildContext context, List<Todo> todos) {
     var appState = context.watch<ApplicationState>();
     if (todos.isEmpty) {
@@ -26,24 +28,106 @@ class TodoPage extends StatelessWidget {
         color: Colors.transparent,
         elevation: 0,
         child: Stack(children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        todo.todoTitle,
-                        maxLines: 1,
+          Container(
+            width: 380,
+            height: 56,
+            padding:
+                const EdgeInsets.only(top: 0, left: 16, right: 24, bottom: 0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (todos.contains(todo))
+                  Container(
+                    width: 40,
+                    height: 40,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: ShapeDecoration(
+                      color: Color(0xFFFFE20C),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100),
                       ),
-                      const SizedBox(height: 8.0),
-                    ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Center(
+                            child: Text(
+                              '${todos.indexOf(todo) + 1}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w500,
+                                height: 0.09,
+                                letterSpacing: 0.15,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16.0, 0, 16, 0),
+                    child: Text(
+                      todo.todoTitle,
+                      maxLines: 1,
+                      style: const TextStyle(
+                        color: Color(0xFF1D1B20),
+                        fontSize: 16,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w400,
+                        height: 0.09,
+                        letterSpacing: 0.50,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  width: 24,
+                  height: 24,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: ShapeDecoration(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 20,
+                              height: 20,
+                              decoration: ShapeDecoration(
+                                color: Color(0xFFA06C46),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(2)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ]),
       );
@@ -208,49 +292,84 @@ class TodoPage extends StatelessWidget {
 
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.all(24.0),
-          child: SizedBox(
-            width: 400,
-            child: RichText(
-              text: TextSpan(
-                children: [
-                  const TextSpan(
-                    text: '오늘 총 ',
-                    style: TextStyle(
-                      color: Color(0xFF49454F),
-                      fontSize: 14,
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.w400,
-                      height: 1.0,
-                      letterSpacing: 0.25,
-                    ),
+        Container(
+          width: 380,
+          padding: EdgeInsets.fromLTRB(35, 40, 35, 0),
+          clipBehavior: Clip.antiAlias,
+          decoration: const BoxDecoration(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                width: double.infinity,
+                child: Text(
+                  'Beeginner님!',
+                  style: TextStyle(
+                    color: Color(0xFF1D1B20),
+                    fontSize: 24,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w400,
+                    height: 0.06,
                   ),
-                  TextSpan(
-                    text: '$numberOfTodos개', // 변수를 사용
-                    style: const TextStyle(
-                      color: Color(0xFF49454F),
-                      fontSize: 14,
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.w600,
-                      height: 1.0,
-                      letterSpacing: 0.25,
-                    ),
-                  ),
-                  const TextSpan(
-                    text: '의 할 일이 남아있어요!\n잊지않도록 도와줄게요 :)',
-                    style: TextStyle(
-                      color: Color(0xFF49454F),
-                      fontSize: 14,
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.w400,
-                      height: 1.0,
-                      letterSpacing: 0.25,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: 380,
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      const TextSpan(
+                        text: '오늘 총 ',
+                        style: TextStyle(
+                          color: Color(0xFF49454F),
+                          fontSize: 14,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w400,
+                          height: 1.0,
+                          letterSpacing: 0.25,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '$numberOfTodos개', // 변수를 사용
+                        style: const TextStyle(
+                          color: Color(0xFF49454F),
+                          fontSize: 14,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w600,
+                          height: 1.0,
+                          letterSpacing: 0.25,
+                        ),
+                      ),
+                      const TextSpan(
+                        text: '의 할 일이 남아있어요!\n',
+                        style: TextStyle(
+                          color: Color(0xFF49454F),
+                          fontSize: 14,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w400,
+                          height: 1.0,
+                          letterSpacing: 0.25,
+                        ),
+                      ),
+                      const TextSpan(
+                        text: '잊지않도록 도와줄게요 :)',
+                        style: TextStyle(
+                          color: Color(0xFF49454F),
+                          fontSize: 14,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w400,
+                          height: 1.3,
+                          letterSpacing: 0.25,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         Expanded(
