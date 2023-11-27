@@ -137,6 +137,7 @@ class _TodoPageState extends State<TodoPage> {
                 );
               },
             ),
+            const SizedBox(height: 13.0),
           ],
         ),
       ),
