@@ -37,7 +37,7 @@ class ApplicationState extends ChangeNotifier {
         _loggedIn = false;
         _emailVerified = false;
       }
-      notifyListeners();
+      // notifyListeners();
     });
   }
 
