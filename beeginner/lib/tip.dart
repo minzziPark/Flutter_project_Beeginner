@@ -134,6 +134,31 @@ class _TipPageState extends State<TipPage> {
                 );
               },
             ),
+            const SizedBox(height: 13.0),
+            Container(
+              width: 380,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(210, 210, 210, 0.28), // 배경색 설정
+                borderRadius: BorderRadius.circular(10.0), // radius 설정
+              ),
+              child: Center(
+                child: Text("+ 새로 작성하기"),
+              ),
+            ),
+            const SizedBox(height: 13.0),
+            Container(
+              width: 380,
+              height: 600,
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(210, 210, 210, 0.28), // 배경색 설정
+                borderRadius: BorderRadius.circular(10.0), // radius 설정
+              ),
+              // child: StreamBuilder<QuerySnapshot>(
+              //   stream: snapshots(),
+              //   builder: _builder,
+              // ),
+            ),
           ],
         ),
       ),
