@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:timer_builder/timer_builder.dart';
+import 'package:provider/provider.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TipPage extends StatefulWidget {
   const TipPage({super.key});
@@ -13,6 +16,7 @@ class TipPage extends StatefulWidget {
 class _TipPageState extends State<TipPage> {
   @override
   Widget build(BuildContext context) {
+    snapshots() => FirebaseFirestore.instance.collection('todo').snapshots();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -156,7 +160,7 @@ class _TipPageState extends State<TipPage> {
               ),
               // child: StreamBuilder<QuerySnapshot>(
               //   stream: snapshots(),
-              //   builder: _builder,
+              //   // builder: _builder,
               // ),
             ),
           ],

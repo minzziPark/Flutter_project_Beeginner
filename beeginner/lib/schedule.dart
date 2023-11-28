@@ -3,6 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:timer_builder/timer_builder.dart';
 
+import 'package:table_calendar/table_calendar.dart';
+
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
 
@@ -134,6 +136,11 @@ class _SchedulePageState extends State<SchedulePage> {
                 );
               },
             ),
+            TableCalendar(
+              focusedDay: DateTime.now(),
+              firstDay: DateTime(2020),
+              lastDay: DateTime(2030),
+            )
           ],
         ),
       ),
