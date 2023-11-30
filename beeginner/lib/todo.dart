@@ -203,6 +203,13 @@ class _TodoPageState extends State<TodoPage> {
                         style: TextStyle(color: Colors.black),
                       ),
                       onPressed: () {},
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            return Colors.transparent;
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -226,6 +233,13 @@ class _TodoPageState extends State<TodoPage> {
                       onPressed: () {
                         Navigator.pushNamed(context, '/schedule');
                       },
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            return Colors.transparent;
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -247,6 +261,13 @@ class _TodoPageState extends State<TodoPage> {
                       onPressed: () {
                         Navigator.pushNamed(context, '/tip');
                       },
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            return Colors.transparent;
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -529,7 +550,7 @@ class _TodoPageState extends State<TodoPage> {
                                           borderRadius:
                                               BorderRadius.circular(2)),
                                     ),
-                                    child: const Icon(
+                                    child: Icon(
                                       Icons.add,
                                       color: Color.fromARGB(255, 255, 255, 255),
                                       size: 16,

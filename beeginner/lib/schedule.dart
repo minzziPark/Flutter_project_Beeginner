@@ -53,6 +53,13 @@ class _SchedulePageState extends State<SchedulePage> {
                       onPressed: () {
                         Navigator.pushNamed(context, '/');
                       },
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            return Colors.transparent;
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -74,6 +81,13 @@ class _SchedulePageState extends State<SchedulePage> {
                         style: TextStyle(color: Colors.black),
                       ),
                       onPressed: () {},
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            return Colors.transparent;
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -95,6 +109,13 @@ class _SchedulePageState extends State<SchedulePage> {
                       onPressed: () {
                         Navigator.pushNamed(context, '/tip');
                       },
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            return Colors.transparent;
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),
