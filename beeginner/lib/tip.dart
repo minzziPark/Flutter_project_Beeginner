@@ -79,33 +79,58 @@ class _TipPageState extends State<TipPage> {
                     ),
                   if (tip.star == true)
                     InkWell(
-                      onTap: () {
-                        FirebaseController.collection.doc(tip.id).update(Tip(
-                              tipTitle: tip.tipTitle,
-                              star: !tip.star,
-                              discription: tip.discription,
-                            ).toJson(tip));
+                      onTap: () async {
+                        if (tip.createTime != null) {
+                          try {
+                            DateTime createTimeDateTime =
+                                tip.createTime!.toDate();
+                            await FirebaseController.collection
+                                .doc(tip.id)
+                                .update({
+                              'tipTitle': tip.tipTitle,
+                              'star': !tip.star,
+                              'discription': tip.discription,
+                              'createTime': Timestamp.fromDate(
+                                  createTimeDateTime), // Convert to Timestamp
+                              // 나머지 필드도 필요한대로 업데이트해주세요.
+                            });
+                          } catch (e) {
+                            print("Error updating document: $e");
+                          }
+                        }
                       },
                       child: const Icon(
                         Icons.star,
                         color: Color.fromARGB(255, 0, 0, 0),
-                        size: 20,
+                        size: 23,
                       ),
                     ),
                   if (tip.star == false)
                     InkWell(
-                      onTap: () {
-                        FirebaseController.collection.doc(tip.id).update(Tip(
-                              tipTitle: tip.tipTitle,
-                              star: !tip.star,
-                              discription: tip.discription,
-                            ).toJson(tip));
-                        print(tip.createTime);
+                      onTap: () async {
+                        if (tip.createTime != null) {
+                          try {
+                            DateTime createTimeDateTime =
+                                tip.createTime!.toDate();
+                            await FirebaseController.collection
+                                .doc(tip.id)
+                                .update({
+                              'tipTitle': tip.tipTitle,
+                              'star': !tip.star,
+                              'discription': tip.discription,
+                              'createTime': Timestamp.fromDate(
+                                  createTimeDateTime), // Convert to Timestamp
+                              // 나머지 필드도 필요한대로 업데이트해주세요.
+                            });
+                          } catch (e) {
+                            print("Error updating document: $e");
+                          }
+                        }
                       },
                       child: const Icon(
                         Icons.star_border_outlined,
                         color: Color.fromARGB(255, 0, 0, 0),
-                        size: 20,
+                        size: 23,
                       ),
                     ),
                 ]),
@@ -166,6 +191,13 @@ class _TipPageState extends State<TipPage> {
                       onPressed: () {
                         Navigator.pushNamed(context, '/');
                       },
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            return Colors.transparent;
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -189,6 +221,13 @@ class _TipPageState extends State<TipPage> {
                       onPressed: () {
                         Navigator.pushNamed(context, '/schedule');
                       },
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            return Colors.transparent;
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -208,6 +247,13 @@ class _TipPageState extends State<TipPage> {
                       child: const Text('꿀 팁',
                           style: TextStyle(color: Colors.black)),
                       onPressed: () {},
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            return Colors.transparent;
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -250,15 +296,20 @@ class _TipPageState extends State<TipPage> {
               },
             ),
             const SizedBox(height: 13.0),
-            Container(
-              width: 380,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(210, 210, 210, 0.28), // 배경색 설정
-                borderRadius: BorderRadius.circular(10.0), // radius 설정
-              ),
-              child: Center(
-                child: Text("+ 새로 작성하기"),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, '/tip_write');
+              },
+              child: Container(
+                width: 380,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(210, 210, 210, 0.28), // 배경색 설정
+                  borderRadius: BorderRadius.circular(10.0), // radius 설정
+                ),
+                child: Center(
+                  child: Text("+ 새로 작성하기"),
+                ),
               ),
             ),
             const SizedBox(height: 13.0),
