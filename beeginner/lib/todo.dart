@@ -132,7 +132,7 @@ class _TodoPageState extends State<TodoPage> {
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(2)),
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.check,
                                     color: Color.fromARGB(255, 255, 255, 255),
                                     size: 16,
@@ -326,7 +326,7 @@ class _TodoPageState extends State<TodoPage> {
         children: [
           Container(
             width: 380,
-            padding: EdgeInsets.fromLTRB(35, 40, 35, 0),
+            padding: const EdgeInsets.fromLTRB(35, 40, 35, 0),
             clipBehavior: Clip.antiAlias,
             decoration: const BoxDecoration(),
             child: Column(
@@ -529,7 +529,7 @@ class _TodoPageState extends State<TodoPage> {
                                           borderRadius:
                                               BorderRadius.circular(2)),
                                     ),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.add,
                                       color: Color.fromARGB(255, 255, 255, 255),
                                       size: 16,
