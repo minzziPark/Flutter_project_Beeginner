@@ -5,14 +5,14 @@ class Tip {
   String? id;
   late String tipTitle;
   late bool star;
-  late String discription;
+  late String description;
   Timestamp? createTime;
 
   Tip({
     this.id,
     required this.tipTitle,
     required this.star,
-    required this.discription,
+    required this.description,
     Timestamp? createTime,
   });
 
@@ -24,7 +24,7 @@ class Tip {
     id = json['id'];
     tipTitle = json['tipTitle'];
     star = json['star'];
-    discription = json['discription'];
+    description = json['description'];
     createTime = json['createTime'];
   }
 
@@ -32,7 +32,7 @@ class Tip {
         'id': id,
         'tipTitle': tipTitle,
         'star': star,
-        'discription': discription,
-        'createTime': createTime,
+        'description': description,
+        'createTime': tip.createTime ?? FieldValue.serverTimestamp(),
       };
 }

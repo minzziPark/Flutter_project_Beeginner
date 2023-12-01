@@ -89,7 +89,7 @@ class _TipPageState extends State<TipPage> {
                                 .update({
                               'tipTitle': tip.tipTitle,
                               'star': !tip.star,
-                              'discription': tip.discription,
+                              'description': tip.description,
                               'createTime': Timestamp.fromDate(
                                   createTimeDateTime), // Convert to Timestamp
                               // 나머지 필드도 필요한대로 업데이트해주세요.
@@ -117,7 +117,7 @@ class _TipPageState extends State<TipPage> {
                                 .update({
                               'tipTitle': tip.tipTitle,
                               'star': !tip.star,
-                              'discription': tip.discription,
+                              'description': tip.description,
                               'createTime': Timestamp.fromDate(
                                   createTimeDateTime), // Convert to Timestamp
                               // 나머지 필드도 필요한대로 업데이트해주세요.
@@ -328,12 +328,11 @@ class _TipPageState extends State<TipPage> {
           ],
         ),
       ),
+      resizeToAvoidBottomInset: false,
     );
   }
 
   Widget _builder(BuildContext context, AsyncSnapshot snapshot) {
-    DocumentReference<Map<String, dynamic>> tipRef;
-    String documentId;
     if (snapshot.data == null) return Container();
 
     List<Tip> tips = snapshot.data?.docs.map<Tip>((data) {
