@@ -181,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                           TextStyle(color: Color.fromARGB(255, 255, 226, 12)),
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/sign_in');
+                      Navigator.pushNamed(context, '/sign_up');
                     },
                   ),
                 ),
