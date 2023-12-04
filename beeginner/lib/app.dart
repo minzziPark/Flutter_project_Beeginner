@@ -1,5 +1,6 @@
 import 'package:beeginner/main.dart';
 import 'package:beeginner/schedule.dart';
+import 'package:beeginner/signup.dart';
 import 'package:beeginner/tip.dart';
 import 'package:beeginner/tip_write.dart';
 import 'package:beeginner/todo.dart';
@@ -35,6 +36,8 @@ class BeeginnerApp extends StatelessWidget {
           case '/tip_write':
             page = const TipWritePage();
             break;
+          case '/sign_up':
+            page = const SignUpPage();
           default:
             page = const SizedBox(); // Handle unknown routes if needed
         }
