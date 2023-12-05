@@ -1,3 +1,4 @@
+import 'package:beeginner/addschedule.dart';
 import 'package:beeginner/main.dart';
 import 'package:beeginner/schedule.dart';
 import 'package:beeginner/signup.dart';
@@ -38,6 +39,8 @@ class BeeginnerApp extends StatelessWidget {
             break;
           case '/sign_up':
             page = const SignUpPage();
+          case '/add_schedule':
+            page = const AddSchedulePage();
           default:
             page = const SizedBox(); // Handle unknown routes if needed
         }
