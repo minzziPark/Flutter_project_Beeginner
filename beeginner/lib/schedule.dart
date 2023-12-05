@@ -1,3 +1,4 @@
+import 'package:beeginner/addschedule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -157,11 +158,44 @@ class _SchedulePageState extends State<SchedulePage> {
                 );
               },
             ),
-            TableCalendar(
-              focusedDay: DateTime.now(),
-              firstDay: DateTime(2020),
-              lastDay: DateTime(2030),
-            )
+            Container(
+              width: 380,
+              child: TableCalendar(
+                focusedDay: DateTime.now(),
+                firstDay: DateTime(2020),
+                lastDay: DateTime(2030),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Container(
+                width: 380,
+                height: 50,
+                decoration: ShapeDecoration(
+                  color: Color(0x47D2D2D2),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddSchedulePage()),
+                    );
+                  },
+                  child: const Center(
+                    child: Text(
+                      '+ 일정추가', // 원하는 텍스트로 변경
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0), // 텍스트의 색상 설정
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
