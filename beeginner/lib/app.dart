@@ -39,8 +39,10 @@ class BeeginnerApp extends StatelessWidget {
             break;
           case '/sign_up':
             page = const SignUpPage();
+            break;
           case '/add_schedule':
             page = const AddSchedulePage();
+            break;
           default:
             page = const SizedBox(); // Handle unknown routes if needed
         }
