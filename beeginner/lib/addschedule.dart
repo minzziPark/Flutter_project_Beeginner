@@ -13,6 +13,35 @@ class AddSchedulePage extends StatefulWidget {
 class _AddSchedulePageState extends State<AddSchedulePage> {
   DateTime date = DateTime.now();
   bool isChanged = false;
+  bool isChanged_time = false;
+  List<String> dropdownList = [
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+    '19',
+    '20',
+    '21',
+    '22',
+    '23',
+    '24'
+  ];
+  var selectedTime = "총 근무시간을 선택하세요.";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -245,39 +274,35 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
                               height: 40,
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () async {},
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(10), // 버튼의 모양을 둥글게 설정
-                              ),
-                              shadowColor:
-                                  Color.fromRGBO(0, 0, 0, 0.5), // 배경색 설정
-                              primary: Color.fromRGBO(255, 255, 255, 1),
-                              onPrimary: Color.fromRGBO(133, 133, 133, 1),
-                              // elevation: 1,
-                            ).copyWith(
-                              splashFactory:
-                                  NoSplash.splashFactory, // 눌림 효과의 색상 설정
+                          DropdownButton<String>(
+                            value: selectedTime, // 선택된 값
+                            onChanged: (String? newValue) {
+                              // 드롭다운 값이 변경되었을 때의 동작
+                              setState(() {
+                                selectedTime = newValue!;
+                                isChanged_time = true;
+                              });
+                            },
+                            style: TextStyle(
+                              color: Color(0xFF696969),
+                              fontSize: 15,
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w300,
+                              height: 0.06,
+                              letterSpacing: 0.10,
                             ),
-                            child: Container(
-                              width: 280,
-                              height: 50,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 24, horizontal: 0), // 내용의 패딩 설정
-                              child: const Text(
-                                '총 근무시간을 선택하세요.',
-                                style: TextStyle(
-                                  color: Color(0xFF696969),
-                                  fontSize: 15,
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.w300,
-                                  height: 0.06,
-                                  letterSpacing: 0.10,
-                                ),
-                              ),
+                            icon: Icon(
+                              Icons.arrow_drop_down,
+                              color: Color(0xFF696969),
                             ),
+                            underline: Container(), // 드롭다운 버튼의 밑줄 제거
+                            items: dropdownList
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
                           )
                         ],
                       ),
