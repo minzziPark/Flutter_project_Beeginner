@@ -11,6 +11,8 @@ class AddSchedulePage extends StatefulWidget {
 }
 
 class _AddSchedulePageState extends State<AddSchedulePage> {
+  DateTime date = DateTime.now();
+  bool isChanged = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -173,29 +175,51 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
                       child: Row(
                         children: [
                           Container(
-                            height: 35,
+                            height: 40,
                             child: SvgPicture.asset(
                               'assets/images/tip_write_line.svg',
-                              height: 35,
+                              height: 40,
                             ),
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              // 버튼이 눌렸을 때의 동작
+                            onPressed: () async {
+                              final selectedDate = await showDatePicker(
+                                context: context,
+                                initialDate: date,
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime.now(),
+                              );
+                              if (selectedDate != null) {
+                                setState(() {
+                                  date = selectedDate;
+                                  isChanged = true;
+                                });
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.circular(10), // 버튼의 모양을 둥글게 설정
                               ),
-                              primary: Color(0xFF696969), // 배경색 설정
+                              shadowColor:
+                                  Color.fromRGBO(0, 0, 0, 0.5), // 배경색 설정
+                              primary: Color.fromRGBO(255, 255, 255, 1),
+                              onPrimary: Color.fromRGBO(133, 133, 133, 1),
+                              // elevation: 1,
+                            ).copyWith(
+                              splashFactory:
+                                  NoSplash.splashFactory, // 눌림 효과의 색상 설정
                             ),
                             child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 20), // 내용의 패딩 설정
+                              width: 280,
+                              height: 50,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 24, horizontal: 0), // 내용의 패딩 설정
                               child: Text(
-                                '날짜를 선택하세요.',
-                                style: TextStyle(
+                                isChanged
+                                    ? DateFormat('yyyy.MM.dd.EEE').format(date)
+                                    : '날짜를 선택하세요.',
+                                style: const TextStyle(
                                   color: Color(0xFF696969),
                                   fontSize: 15,
                                   fontFamily: 'Roboto',
@@ -215,18 +239,36 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
                       child: Row(
                         children: [
                           Container(
-                            height: 35,
+                            height: 40,
                             child: SvgPicture.asset(
                               'assets/images/tip_write_line.svg',
-                              height: 35,
+                              height: 40,
                             ),
                           ),
-                          const Expanded(
-                            child: TextField(
-                              // controller: _titleController,
-                              decoration: InputDecoration(
-                                hintText: '총 근무시간을 선택하세요.',
-                                hintStyle: TextStyle(
+                          ElevatedButton(
+                            onPressed: () async {},
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(10), // 버튼의 모양을 둥글게 설정
+                              ),
+                              shadowColor:
+                                  Color.fromRGBO(0, 0, 0, 0.5), // 배경색 설정
+                              primary: Color.fromRGBO(255, 255, 255, 1),
+                              onPrimary: Color.fromRGBO(133, 133, 133, 1),
+                              // elevation: 1,
+                            ).copyWith(
+                              splashFactory:
+                                  NoSplash.splashFactory, // 눌림 효과의 색상 설정
+                            ),
+                            child: Container(
+                              width: 280,
+                              height: 50,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 24, horizontal: 0), // 내용의 패딩 설정
+                              child: const Text(
+                                '총 근무시간을 선택하세요.',
+                                style: TextStyle(
                                   color: Color(0xFF696969),
                                   fontSize: 15,
                                   fontFamily: 'Roboto',
@@ -234,14 +276,9 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
                                   height: 0.06,
                                   letterSpacing: 0.10,
                                 ),
-                                counterText: '',
-                                border: InputBorder.none, // 입력 필드의 테두리 제거
-                                fillColor: Color.fromRGBO(
-                                    255, 255, 255, 0.5), // 배경색 제거
-                                filled: true, // 배경을 채우도록 설정
                               ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
