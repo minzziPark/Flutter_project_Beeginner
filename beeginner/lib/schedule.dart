@@ -177,20 +177,19 @@ class _SchedulePageState extends State<SchedulePage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: GestureDetector(
+                child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddSchedulePage()),
-                    );
+                    Navigator.pushNamed(context, '/add_schedule');
                   },
-                  child: const Center(
-                    child: Text(
-                      '+ 일정추가', // 원하는 텍스트로 변경
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 0, 0, 0), // 텍스트의 색상 설정
-                      ),
+                  child: Container(
+                    width: 380,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(210, 210, 210, 0.28), // 배경색 설정
+                      borderRadius: BorderRadius.circular(10.0), // radius 설정
+                    ),
+                    child: Center(
+                      child: Text("+ 일정 추가하기"),
                     ),
                   ),
                 ),
