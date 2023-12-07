@@ -223,7 +223,7 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
                                 context: context,
                                 initialDate: date,
                                 firstDate: DateTime(2000),
-                                lastDate: DateTime.now(),
+                                lastDate: DateTime(2030),
                               );
                               if (selectedDate != null) {
                                 setState(() {
