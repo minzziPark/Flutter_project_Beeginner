@@ -40,7 +40,7 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
     '23',
     '24'
   ];
-  var selectedTime = "총 근무시간을 선택하세요.";
+  var selectedTime = '1';
 
   @override
   Widget build(BuildContext context) {
@@ -264,7 +264,7 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
                     ),
                     const SizedBox(height: 13),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(22.0, 0.0, 22.0, 0.0),
+                      padding: const EdgeInsets.fromLTRB(22.0, 0, 22.0, 0.0),
                       child: Row(
                         children: [
                           Container(
@@ -274,35 +274,43 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
                               height: 40,
                             ),
                           ),
-                          DropdownButton<String>(
-                            value: selectedTime, // 선택된 값
-                            onChanged: (String? newValue) {
-                              // 드롭다운 값이 변경되었을 때의 동작
-                              setState(() {
-                                selectedTime = newValue!;
-                                isChanged_time = true;
-                              });
-                            },
-                            style: TextStyle(
-                              color: Color(0xFF696969),
-                              fontSize: 15,
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w300,
-                              height: 0.06,
-                              letterSpacing: 0.10,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('총 근무시간'),
+                          ),
+                          Spacer(),
+                          Container(
+                            // width: 330,
+                            child: DropdownButton<String>(
+                              value: selectedTime, // 선택된 값
+                              onChanged: (String? newValue) {
+                                // 드롭다운 값이 변경되었을 때의 동작
+                                setState(() {
+                                  selectedTime = newValue!;
+                                  isChanged_time = true;
+                                });
+                              },
+                              style: TextStyle(
+                                color: Color(0xFF696969),
+                                fontSize: 15,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w300,
+                                height: 0.06,
+                                letterSpacing: 0.10,
+                              ),
+                              icon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color(0xFF696969),
+                              ),
+                              underline: Container(), // 드롭다운 버튼의 밑줄 제거
+                              items: dropdownList.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
                             ),
-                            icon: Icon(
-                              Icons.arrow_drop_down,
-                              color: Color(0xFF696969),
-                            ),
-                            underline: Container(), // 드롭다운 버튼의 밑줄 제거
-                            items: dropdownList
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
                           )
                         ],
                       ),
@@ -347,6 +355,106 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
                   ],
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  // mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        // Container를 눌렀을 때 이전 페이지로 이동하는 코드를 추가
+                        Navigator.pop(
+                            context); // 예시로 현재 페이지를 닫는 코드 (pop을 사용하여 이전 페이지로 이동)
+                      },
+                      child: Container(
+                        width: 183,
+                        height: 43,
+                        decoration: ShapeDecoration(
+                          color: Color.fromRGBO(255, 243, 156, 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            '취소',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w300,
+                              height: 0.11,
+                              letterSpacing: 0.10,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        // DateTime now = DateTime.now();
+                        // Timestamp createTime = Timestamp.fromDate(now);
+                        // DateTime createTimeDateTime = createTime.toDate();
+                        // if (createTime != null) {
+                        //   try {
+                        //     tipRef = await FirebaseFirestore.instance
+                        //         .collection('tip')
+                        //         .add({
+                        //       'tipTitle': _titleController.text,
+                        //       'description': _descriptionController.text,
+                        //       'star': false,
+                        //       // 'createTime':
+                        //       //     Timestamp.fromDate(createTimeDateTime),
+                        //     });
+                        //     documentId = tipRef.id;
+                        //     FirebaseController.collection
+                        //         .doc(documentId)
+                        //         .update(Tip(
+                        //           id: documentId,
+                        //           tipTitle: _titleController.text,
+                        //           description: _descriptionController.text,
+                        //           star: false,
+                        //         ).toJson(Tip(
+                        //           id: documentId,
+                        //           tipTitle: _titleController.text,
+                        //           description: _descriptionController.text,
+                        //           star: false,
+                        //         )));
+                        // } catch (e) {
+                        //   print("Error updating document: $e");
+                        // }
+                        // }
+                        Navigator.pushNamed(context, '/schedule');
+                      },
+                      child: Container(
+                        width: 183,
+                        height: 43,
+                        decoration: ShapeDecoration(
+                          color: Color(0xFFFFE20C),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            '저장',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w300,
+                              height: 0.11,
+                              letterSpacing: 0.10,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
             ],
           ),
         ));
