@@ -337,12 +337,12 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
                         ),
                       ),
                     ),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.fromLTRB(10, 0, 10.0, 0),
                       child: TextField(
                         controller: _memoController,
                         maxLines: 18,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: '내용을 입력하세요.',
                           hintStyle: TextStyle(
                             color: Color(0xFF696969),
