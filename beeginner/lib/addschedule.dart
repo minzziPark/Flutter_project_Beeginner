@@ -1,3 +1,6 @@
+import 'package:beeginner/controller/ScheduleController.dart';
+import 'package:beeginner/model/schedulelist.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +14,7 @@ class AddSchedulePage extends StatefulWidget {
 }
 
 class _AddSchedulePageState extends State<AddSchedulePage> {
+  final TextEditingController _memoController = TextEditingController();
   DateTime date = DateTime.now();
   bool isChanged = false;
   bool isChanged_time = false;
@@ -44,6 +48,9 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
 
   @override
   Widget build(BuildContext context) {
+    DocumentReference<Map<String, dynamic>> tipRef;
+    String documentId;
+
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -330,12 +337,12 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
                         ),
                       ),
                     ),
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.fromLTRB(10, 0, 10.0, 0),
                       child: TextField(
-                        // controller: _descriptionController,
+                        controller: _memoController,
                         maxLines: 18,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: '내용을 입력하세요.',
                           hintStyle: TextStyle(
                             color: Color(0xFF696969),
@@ -394,38 +401,34 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        // DateTime now = DateTime.now();
-                        // Timestamp createTime = Timestamp.fromDate(now);
-                        // DateTime createTimeDateTime = createTime.toDate();
-                        // if (createTime != null) {
-                        //   try {
-                        //     tipRef = await FirebaseFirestore.instance
-                        //         .collection('tip')
-                        //         .add({
-                        //       'tipTitle': _titleController.text,
-                        //       'description': _descriptionController.text,
-                        //       'star': false,
-                        //       // 'createTime':
-                        //       //     Timestamp.fromDate(createTimeDateTime),
-                        //     });
-                        //     documentId = tipRef.id;
-                        //     FirebaseController.collection
-                        //         .doc(documentId)
-                        //         .update(Tip(
-                        //           id: documentId,
-                        //           tipTitle: _titleController.text,
-                        //           description: _descriptionController.text,
-                        //           star: false,
-                        //         ).toJson(Tip(
-                        //           id: documentId,
-                        //           tipTitle: _titleController.text,
-                        //           description: _descriptionController.text,
-                        //           star: false,
-                        //         )));
-                        // } catch (e) {
-                        //   print("Error updating document: $e");
-                        // }
-                        // }
+                        if (isChanged) {
+                          Timestamp createTime = Timestamp.fromDate(date);
+                          try {
+                            tipRef = await FirebaseFirestore.instance
+                                .collection('schedule')
+                                .add({
+                              'date': date,
+                              'time': selectedTime,
+                              'memo': _memoController.text,
+                            });
+                            documentId = tipRef.id;
+                            ScheduleController.collection
+                                .doc(documentId)
+                                .update(Schedule(
+                                  id: documentId,
+                                  date: createTime,
+                                  time: selectedTime,
+                                  memo: _memoController.text,
+                                ).toJson(Schedule(
+                                  id: documentId,
+                                  date: createTime,
+                                  time: selectedTime,
+                                  memo: _memoController.text,
+                                )));
+                          } catch (e) {
+                            print("Error updating document: $e");
+                          }
+                        }
                         Navigator.pushNamed(context, '/schedule');
                       },
                       child: Container(
