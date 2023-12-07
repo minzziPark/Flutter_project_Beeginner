@@ -342,90 +342,90 @@ class _TodoPageState extends State<TodoPage> {
 
     int numberOfTodos = todos.length;
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            width: 380,
-            padding: const EdgeInsets.fromLTRB(35, 40, 35, 0),
-            clipBehavior: Clip.antiAlias,
-            decoration: const BoxDecoration(),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    'Beeginner님!',
-                    style: TextStyle(
-                      color: Color(0xFF1D1B20),
-                      fontSize: 24,
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.w400,
-                      height: 0.06,
-                    ),
+    return Column(
+      children: [
+        Container(
+          width: 380,
+          padding: const EdgeInsets.fromLTRB(35, 40, 35, 0),
+          clipBehavior: Clip.antiAlias,
+          decoration: const BoxDecoration(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                width: double.infinity,
+                child: Text(
+                  'Beeginner님!',
+                  style: TextStyle(
+                    color: Color(0xFF1D1B20),
+                    fontSize: 24,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w400,
+                    height: 0.06,
                   ),
                 ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: 380,
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        const TextSpan(
-                          text: '오늘 총 ',
-                          style: TextStyle(
-                            color: Color(0xFF49454F),
-                            fontSize: 14,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w400,
-                            height: 1.0,
-                            letterSpacing: 0.25,
-                          ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: 380,
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      const TextSpan(
+                        text: '오늘 총 ',
+                        style: TextStyle(
+                          color: Color(0xFF49454F),
+                          fontSize: 14,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w400,
+                          height: 1.0,
+                          letterSpacing: 0.25,
                         ),
-                        TextSpan(
-                          text: '$numberOfTodos개', // 변수를 사용
-                          style: const TextStyle(
-                            color: Color(0xFF49454F),
-                            fontSize: 14,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w600,
-                            height: 1.0,
-                            letterSpacing: 0.25,
-                          ),
+                      ),
+                      TextSpan(
+                        text: '$numberOfTodos개', // 변수를 사용
+                        style: const TextStyle(
+                          color: Color(0xFF49454F),
+                          fontSize: 14,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w600,
+                          height: 1.0,
+                          letterSpacing: 0.25,
                         ),
-                        const TextSpan(
-                          text: '의 할 일이 남아있어요!\n',
-                          style: TextStyle(
-                            color: Color(0xFF49454F),
-                            fontSize: 14,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w400,
-                            height: 1.0,
-                            letterSpacing: 0.25,
-                          ),
+                      ),
+                      const TextSpan(
+                        text: '의 할 일이 남아있어요!\n',
+                        style: TextStyle(
+                          color: Color(0xFF49454F),
+                          fontSize: 14,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w400,
+                          height: 1.0,
+                          letterSpacing: 0.25,
                         ),
-                        const TextSpan(
-                          text: '잊지않도록 도와줄게요 :)',
-                          style: TextStyle(
-                            color: Color(0xFF49454F),
-                            fontSize: 14,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w400,
-                            height: 1.3,
-                            letterSpacing: 0.25,
-                          ),
+                      ),
+                      const TextSpan(
+                        text: '잊지않도록 도와줄게요 :)',
+                        style: TextStyle(
+                          color: Color(0xFF49454F),
+                          fontSize: 14,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w400,
+                          height: 1.3,
+                          letterSpacing: 0.25,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          GridView.count(
+        ),
+        SingleChildScrollView(
+          child: GridView.count(
             crossAxisCount: 1,
             padding: const EdgeInsets.all(11.0),
             childAspectRatio: 6,
@@ -433,143 +433,133 @@ class _TodoPageState extends State<TodoPage> {
             physics: const NeverScrollableScrollPhysics(),
             children: _buildGridCards(context, todos),
           ),
-          const Divider(
-            height: 0,
-            thickness: 0.5,
-            color: Color.fromRGBO(230, 224, 233, 1),
-          ),
-          Card(
-            color: Colors.transparent,
-            elevation: 0,
-            child: Stack(children: [
-              Container(
-                width: 380,
-                height: 70,
-                padding: const EdgeInsets.only(
-                    top: 0, left: 25, right: 35, bottom: 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: ShapeDecoration(
-                        color: Color.fromRGBO(255, 226, 12, 0.25),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100),
-                        ),
+        ),
+        const Divider(
+          height: 0,
+          thickness: 0.5,
+          color: Color.fromRGBO(230, 224, 233, 1),
+        ),
+        Card(
+          color: Colors.transparent,
+          elevation: 0,
+          child: Stack(children: [
+            Container(
+              width: 380,
+              height: 70,
+              padding:
+                  const EdgeInsets.only(top: 0, left: 25, right: 35, bottom: 0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: ShapeDecoration(
+                      color: Color.fromRGBO(255, 226, 12, 0.25),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100),
                       ),
-                      child: const Row(
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: _todoController,
+                      decoration: const InputDecoration(
+                        hintText: '할 일을 입력하세요.',
+                        hintStyle: TextStyle(
+                          color: Color(0xFF696969),
+                          fontSize: 16,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w300,
+                          height: 0.06,
+                          letterSpacing: 0.10,
+                        ),
+                        counterText: '',
+                        border: InputBorder.none,
+                        fillColor: Color.fromARGB(0, 249, 149, 149),
+                        filled: true,
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      todoRef = await FirebaseFirestore.instance
+                          .collection('todo')
+                          .add({
+                        'todoTitle': _todoController.text,
+                        'checked': false,
+                      });
+                      documentId = todoRef.id;
+                      FirebaseController.collection.doc(documentId).set(Todo(
+                              id: documentId,
+                              todoTitle: _todoController.text,
+                              checked: false)
+                          .toJson(Todo(
+                              id: documentId,
+                              todoTitle: _todoController.text,
+                              checked: false)));
+                      _todoController.text = '';
+                    },
+                    child: Container(
+                      width: 24,
+                      height: 24,
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            width: 40,
-                            height: 40,
+                          Container(
+                            decoration: ShapeDecoration(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 20,
+                                  height: 20,
+                                  decoration: ShapeDecoration(
+                                    color: Color.fromARGB(255, 121, 121, 121),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(2)),
+                                  ),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    size: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16, 0),
-                        child: Container(
-                          width: 150,
-                          child: TextField(
-                            controller: _todoController,
-                            decoration: const InputDecoration(
-                              hintText: '할 일을 입력하세요.',
-                              border: InputBorder.none, // border 없애기
-                              focusedBorder:
-                                  InputBorder.none, // 포커스된 상태에서의 border 없애기
-                            ),
-                            style: const TextStyle(
-                              color: Color(0xFF1D1B20),
-                              fontSize: 16,
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w400,
-                              height: 0.09,
-                              letterSpacing: 0.50,
-                            ),
-                            onTap: () {
-                              setState(() {
-                                isTextFieldFocused = true;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () async {
-                        todoRef = await FirebaseFirestore.instance
-                            .collection('todo')
-                            .add({
-                          'todoTitle': _todoController.text,
-                          'checked': false,
-                        });
-                        documentId = todoRef.id;
-                        FirebaseController.collection.doc(documentId).set(Todo(
-                                id: documentId,
-                                todoTitle: _todoController.text,
-                                checked: false)
-                            .toJson(Todo(
-                                id: documentId,
-                                todoTitle: _todoController.text,
-                                checked: false)));
-                      },
-                      child: Container(
-                        width: 24,
-                        height: 24,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              decoration: ShapeDecoration(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 20,
-                                    height: 20,
-                                    decoration: ShapeDecoration(
-                                      color: Color.fromARGB(255, 121, 121, 121),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(2)),
-                                    ),
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                      size: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
-            ]),
-          ),
-        ],
-      ),
+            ),
+          ]),
+        ),
+      ],
     );
   }
 }
