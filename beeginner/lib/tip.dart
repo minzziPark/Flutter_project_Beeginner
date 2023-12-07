@@ -62,8 +62,10 @@ class _TipPageState extends State<TipPage> {
                         ),
                         const SizedBox(height: 17.0),
                         Text(
-                          DateFormat('yyyy.MM.dd')
-                              .format(tip.createTime!.toDate()),
+                          tip.createTime != null
+                              ? DateFormat('yyyy.MM.dd')
+                                  .format(tip.createTime!.toDate())
+                              : 'N/A',
                           // maxLines: 1,
                           textAlign: TextAlign.start,
                           style: const TextStyle(
