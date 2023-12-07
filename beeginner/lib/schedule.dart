@@ -18,28 +18,29 @@ class _SchedulePageState extends State<SchedulePage> {
   var _selectedDay;
   var _focusedDay = DateTime.now();
 
-  Future<List<DateTime>> fetchDatesFromFirebase() async {
-    List<DateTime> dateList = [];
-
-    try {
-      QuerySnapshot<Map<String, dynamic>> snapshot =
-          await FirebaseFirestore.instance.collection('schedule').get();
-
-      for (QueryDocumentSnapshot<Map<String, dynamic>> document
-          in snapshot.docs) {
-        Timestamp timestamp = document['schedule'];
-        DateTime date = timestamp.toDate();
-        dateList.add(date);
-      }
-    } catch (e) {
-      print("Error fetching dates from Firebase: $e");
-    }
-
-    return dateList;
-  }
-
   @override
   Widget build(BuildContext context) {
+    Future<List<DateTime>> fetchDatesFromFirebase() async {
+      List<DateTime> dateList = [];
+
+      try {
+        QuerySnapshot<Map<String, dynamic>> snapshot =
+            await FirebaseFirestore.instance.collection('schedule').get();
+
+        for (QueryDocumentSnapshot<Map<String, dynamic>> document
+            in snapshot.docs) {
+          Timestamp timestamp = document['date'];
+          DateTime date = timestamp.toDate();
+          dateList.add(date);
+        }
+        print(dateList);
+      } catch (e) {
+        print("Error fetching dates from Firebase: $e");
+      }
+
+      return dateList;
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -184,30 +185,43 @@ class _SchedulePageState extends State<SchedulePage> {
             ),
             Container(
               width: 380,
-              child: TableCalendar(
-                focusedDay: _focusedDay,
-                firstDay: DateTime(2020),
-                lastDay: DateTime(2030),
-                selectedDayPredicate: (day) {
-                  return day.isAfter(DateTime(2023, 12, 15)) &&
-                      day.isBefore(DateTime(2023, 12, 19));
-                },
-                calendarStyle: CalendarStyle(
-                  todayDecoration: const BoxDecoration(
-                    color: const Color(0x3F929292),
-                    shape: BoxShape.circle,
-                  ),
-                  todayTextStyle: const TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 16.0,
-                  ),
-                  selectedDecoration: const BoxDecoration(
-                    color: Color(0xFFA06C46), // 선택된 날짜의 배경색
-                    shape: BoxShape.circle, // 선택된 날짜의 모양
-                    // borderRadius: BorderRadius.circular(5.0), // 선택된 날짜의 모양 설정
-                  ),
-                ),
-              ),
+              child: FutureBuilder<List<DateTime>>(
+                  future: fetchDatesFromFirebase(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Text('No data available');
+                    } else {
+                      return TableCalendar(
+                        focusedDay: _focusedDay,
+                        firstDay: DateTime(2020),
+                        lastDay: DateTime(2030),
+                        selectedDayPredicate: (day) {
+                          return snapshot.data!.any((date) =>
+                              DateFormat('yyyy-MM-dd').format(date) ==
+                              DateFormat('yyyy-MM-dd').format(day));
+                        },
+                        calendarStyle: const CalendarStyle(
+                          todayDecoration: BoxDecoration(
+                            color: Color(0x3F929292),
+                            shape: BoxShape.circle,
+                          ),
+                          todayTextStyle: TextStyle(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 16.0,
+                          ),
+                          selectedDecoration: BoxDecoration(
+                            color: Color(0xFFA06C46), // 선택된 날짜의 배경색
+                            shape: BoxShape.circle, // 선택된 날짜의 모양
+                            // borderRadius: BorderRadius.circular(5.0), // 선택된 날짜의 모양 설정
+                          ),
+                        ),
+                      );
+                    }
+                  }),
             ),
             Padding(
               padding: const EdgeInsets.all(15.0),
