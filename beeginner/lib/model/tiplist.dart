@@ -7,9 +7,11 @@ class Tip {
   late bool star;
   late String description;
   Timestamp? createTime;
+  String? uid;
 
   Tip({
     this.id,
+    this.uid,
     required this.tipTitle,
     required this.star,
     required this.description,
@@ -22,6 +24,7 @@ class Tip {
 
   void fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    uid = json['uid'];
     tipTitle = json['tipTitle'];
     star = json['star'];
     description = json['description'];
@@ -30,6 +33,7 @@ class Tip {
 
   Map<String, dynamic> toJson(Tip tip) => {
         'id': id,
+        'uid': uid,
         'tipTitle': tipTitle,
         'star': star,
         'description': description,
