@@ -1,7 +1,7 @@
 import 'package:beeginner/model/todolist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FirebaseController {
+class TipController {
   static get collection => FirebaseFirestore.instance.collection('tip');
 
   static void add(Todo todo) => collection.add(todo.toJson(todo));
