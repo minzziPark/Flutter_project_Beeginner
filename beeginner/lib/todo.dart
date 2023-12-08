@@ -7,6 +7,7 @@ import 'package:timer_builder/timer_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'model/todolist.dart';
+import 'package:beeginner/main.dart';
 
 class TodoPage extends StatefulWidget {
   const TodoPage({Key? key}) : super(key: key);
@@ -19,144 +20,173 @@ class _TodoPageState extends State<TodoPage> {
   final _todoController = TextEditingController();
   bool isTextFieldFocused = false;
 
-  List<Card> _buildGridCards(BuildContext context, List<Todo> todos) {
+  List<Widget> _buildGridCards(BuildContext context, List<Todo> todos) {
     if (todos.isEmpty) {
-      return const <Card>[];
+      return [const SizedBox.shrink()]; // 빈 목록일 경우 아무것도 표시하지 않음
     }
 
     return todos.map((todo) {
-      return Card(
-        color: Colors.transparent,
-        elevation: 0,
-        child: Stack(children: [
-          Container(
-            width: 380,
-            height: 56,
-            padding:
-                const EdgeInsets.only(top: 0, left: 16, right: 24, bottom: 0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (todos.contains(todo))
-                  Container(
-                    width: 40,
-                    height: 40,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: ShapeDecoration(
-                      color: Color(0xFFFFE20C),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: Center(
-                            child: Text(
-                              '${todos.indexOf(todo) + 1}',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontFamily: 'Roboto',
-                                fontWeight: FontWeight.w500,
-                                height: 0.09,
-                                letterSpacing: 0.15,
-                              ),
-                            ),
+      if (todo.id != null) {
+        return Dismissible(
+          key: Key(todo.id!),
+          onDismissed: (direction) async {
+            try {
+              await FirebaseController.collection.doc(todo.id).delete();
+              setState(() {
+                todos.removeAt(todos.indexOf(todo));
+              });
+            } catch (e) {
+              print("Error delete");
+            }
+          },
+          background: Container(
+            color: Colors.red,
+            child: Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20),
+          ),
+          child: Card(
+            color: Colors.transparent,
+            elevation: 0,
+            child: Stack(children: [
+              Container(
+                width: 380,
+                height: 56,
+                padding: const EdgeInsets.only(
+                    top: 0, left: 16, right: 24, bottom: 0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (todos.contains(todo))
+                      Container(
+                        width: 40,
+                        height: 40,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: ShapeDecoration(
+                          color: Color(0xFFFFE20C),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16.0, 0, 16, 0),
-                    child: Text(
-                      todo.todoTitle,
-                      maxLines: 1,
-                      style: const TextStyle(
-                        color: Color(0xFF1D1B20),
-                        fontSize: 16,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w400,
-                        height: 0.09,
-                        letterSpacing: 0.50,
-                      ),
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    FirebaseController.collection.doc(todo.id).update(Todo(
-                            id: todo.id,
-                            todoTitle: todo.todoTitle,
-                            checked: !todo.checked)
-                        .toJson(todo));
-                  },
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          decoration: ShapeDecoration(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              if (todo.checked)
-                                Container(
-                                  width: 20,
-                                  height: 20,
-                                  decoration: ShapeDecoration(
-                                    color: Color(0xFFA06C46),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(2)),
-                                  ),
-                                  child: const Icon(
-                                    Icons.check,
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    size: 16,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: Center(
+                                child: Text(
+                                  '${todos.indexOf(todo) + 1}',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontFamily: 'Roboto',
+                                    fontWeight: FontWeight.w500,
+                                    height: 0.09,
+                                    letterSpacing: 0.15,
                                   ),
                                 ),
-                              if (!todo.checked)
-                                Container(
-                                  width: 20,
-                                  height: 20,
-                                  decoration: ShapeDecoration(
-                                    color: Color(0xFFA06C46),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(2)),
-                                  ),
-                                )
-                            ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16, 0),
+                        child: Text(
+                          todo.todoTitle,
+                          maxLines: 1,
+                          style: const TextStyle(
+                            color: Color(0xFF1D1B20),
+                            fontSize: 16,
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w400,
+                            height: 0.09,
+                            letterSpacing: 0.50,
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                )
-              ],
-            ),
+                    InkWell(
+                      onTap: () {
+                        FirebaseController.collection.doc(todo.id).update(Todo(
+                                id: todo.id,
+                                todoTitle: todo.todoTitle,
+                                checked: !todo.checked)
+                            .toJson(todo));
+                      },
+                      child: Container(
+                        width: 24,
+                        height: 24,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: ShapeDecoration(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  if (todo.checked)
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      decoration: ShapeDecoration(
+                                        color: Color(0xFFA06C46),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(2)),
+                                      ),
+                                      child: const Icon(
+                                        Icons.check,
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                        size: 16,
+                                      ),
+                                    ),
+                                  if (!todo.checked)
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      decoration: ShapeDecoration(
+                                        color: Color(0xFFA06C46),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(2)),
+                                      ),
+                                    )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ]),
           ),
-        ]),
-      );
+        );
+      } else {
+        return SizedBox.shrink();
+      }
     }).toList();
   }
 
@@ -477,14 +507,15 @@ class _TodoPageState extends State<TodoPage> {
                           'checked': false,
                         });
                         documentId = todoRef.id;
-                        FirebaseController.collection.doc(documentId).set(Todo(
-                                id: documentId,
-                                todoTitle: _todoController.text,
-                                checked: false)
-                            .toJson(Todo(
-                                id: documentId,
-                                todoTitle: _todoController.text,
-                                checked: false)));
+                        FirebaseController.collection.doc(documentId).update(
+                            Todo(
+                                    id: documentId,
+                                    todoTitle: _todoController.text,
+                                    checked: false)
+                                .toJson(Todo(
+                                    id: documentId,
+                                    todoTitle: _todoController.text,
+                                    checked: false)));
                         _todoController.text = '';
                       },
                       child: Container(
