@@ -289,9 +289,7 @@ class _TipWritePageState extends State<TipWritePage> {
                             //     Timestamp.fromDate(createTimeDateTime),
                           });
                           documentId = tipRef.id;
-                          FirebaseController.collection
-                              .doc(documentId)
-                              .update(Tip(
+                          TipController.collection.doc(documentId).update(Tip(
                                 id: documentId,
                                 tipTitle: _titleController.text,
                                 description: _descriptionController.text,
