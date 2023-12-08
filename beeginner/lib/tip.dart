@@ -271,130 +271,154 @@ class _TipPageState extends State<TipPage> {
   }
 
   Widget _buildCard(BuildContext context, Tip tip) {
-    return InkWell(
-        onTap: () {
-          _showTipDetailsModal(context, tip);
+    if (tip.id != null) {
+      return Dismissible(
+        key: Key(tip.id!),
+        onDismissed: (direction) async {
+          try {
+            await TipController.collection.doc(tip.id).delete();
+          } catch (e) {
+            print("Error delete");
+          }
         },
-        child: Card(
-          color: Color.fromARGB(0, 255, 255, 255),
-          elevation: 0,
-          child: Stack(children: [
-            Container(
-              width: 380,
-              height: 66,
-              padding: const EdgeInsets.only(
-                  top: 10, left: 15, right: 16, bottom: 20),
-              child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
+        direction: DismissDirection.endToStart,
+        background: Container(
+          color: Colors.red,
+          child: Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 20),
+        ),
+        child: InkWell(
+            onTap: () {
+              _showTipDetailsModal(context, tip);
+            },
+            child: Card(
+              color: Color.fromARGB(0, 255, 255, 255),
+              elevation: 0,
+              child: Stack(children: [
+                Container(
+                  width: 380,
+                  height: 66,
+                  padding: const EdgeInsets.only(
+                      top: 10, left: 15, right: 16, bottom: 20),
+                  child: Row(
                       mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          tip.tipTitle,
-                          maxLines: 1,
-                          textAlign: TextAlign.start,
-                          style: const TextStyle(
-                            color: Color(0xFF1D1B20),
-                            fontSize: 15,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w600,
-                            height: 0.09,
-                            letterSpacing: 0.50,
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              tip.tipTitle,
+                              maxLines: 1,
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(
+                                color: Color(0xFF1D1B20),
+                                fontSize: 15,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w600,
+                                height: 0.09,
+                                letterSpacing: 0.50,
+                              ),
+                            ),
+                            const SizedBox(height: 17.0),
+                            Text(
+                              tip.createTime != null
+                                  ? DateFormat('yyyy.MM.dd')
+                                      .format(tip.createTime!.toDate())
+                                  : 'N/A',
+                              // maxLines: 1,
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(
+                                color: Color(0xFF1D1B20),
+                                fontSize: 12,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w300,
+                                height: 0.12,
+                                letterSpacing: 0.10,
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (tip.star == true)
+                          InkWell(
+                            onTap: () async {
+                              if (tip.createTime != null) {
+                                try {
+                                  DateTime createTimeDateTime =
+                                      tip.createTime!.toDate();
+                                  await TipController.collection
+                                      .doc(tip.id)
+                                      .update({
+                                    'tipTitle': tip.tipTitle,
+                                    'star': !tip.star,
+                                    'description': tip.description,
+                                    'createTime': Timestamp.fromDate(
+                                        createTimeDateTime), // Convert to Timestamp
+                                    // 나머지 필드도 필요한대로 업데이트해주세요.
+                                  });
+                                } catch (e) {
+                                  print("Error updating document: $e");
+                                }
+                              }
+                            },
+                            child: const Icon(
+                              Icons.star,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              size: 23,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 17.0),
-                        Text(
-                          tip.createTime != null
-                              ? DateFormat('yyyy.MM.dd')
-                                  .format(tip.createTime!.toDate())
-                              : 'N/A',
-                          // maxLines: 1,
-                          textAlign: TextAlign.start,
-                          style: const TextStyle(
-                            color: Color(0xFF1D1B20),
-                            fontSize: 12,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w300,
-                            height: 0.12,
-                            letterSpacing: 0.10,
+                        if (tip.star == false)
+                          InkWell(
+                            onTap: () async {
+                              if (tip.createTime != null) {
+                                try {
+                                  DateTime createTimeDateTime =
+                                      tip.createTime!.toDate();
+                                  await TipController.collection
+                                      .doc(tip.id)
+                                      .update({
+                                    'tipTitle': tip.tipTitle,
+                                    'star': !tip.star,
+                                    'description': tip.description,
+                                    'createTime': Timestamp.fromDate(
+                                        createTimeDateTime), // Convert to Timestamp
+                                    // 나머지 필드도 필요한대로 업데이트해주세요.
+                                  });
+                                } catch (e) {
+                                  print("Error updating document: $e");
+                                }
+                              }
+                            },
+                            child: const Icon(
+                              Icons.star_border_outlined,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              size: 23,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    if (tip.star == true)
-                      InkWell(
-                        onTap: () async {
-                          if (tip.createTime != null) {
-                            try {
-                              DateTime createTimeDateTime =
-                                  tip.createTime!.toDate();
-                              await FirebaseController.collection
-                                  .doc(tip.id)
-                                  .update({
-                                'tipTitle': tip.tipTitle,
-                                'star': !tip.star,
-                                'description': tip.description,
-                                'createTime': Timestamp.fromDate(
-                                    createTimeDateTime), // Convert to Timestamp
-                                // 나머지 필드도 필요한대로 업데이트해주세요.
-                              });
-                            } catch (e) {
-                              print("Error updating document: $e");
-                            }
-                          }
-                        },
-                        child: const Icon(
-                          Icons.star,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          size: 23,
-                        ),
-                      ),
-                    if (tip.star == false)
-                      InkWell(
-                        onTap: () async {
-                          if (tip.createTime != null) {
-                            try {
-                              DateTime createTimeDateTime =
-                                  tip.createTime!.toDate();
-                              await FirebaseController.collection
-                                  .doc(tip.id)
-                                  .update({
-                                'tipTitle': tip.tipTitle,
-                                'star': !tip.star,
-                                'description': tip.description,
-                                'createTime': Timestamp.fromDate(
-                                    createTimeDateTime), // Convert to Timestamp
-                                // 나머지 필드도 필요한대로 업데이트해주세요.
-                              });
-                            } catch (e) {
-                              print("Error updating document: $e");
-                            }
-                          }
-                        },
-                        child: const Icon(
-                          Icons.star_border_outlined,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          size: 23,
-                        ),
-                      ),
-                  ]),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Divider(
-                height: 0.5,
-                thickness: 0.5,
-                color: Color.fromRGBO(230, 224, 233, 1),
-              ),
-            ),
-          ]),
-        ));
+                      ]),
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Divider(
+                    height: 0.5,
+                    thickness: 0.5,
+                    color: Color.fromRGBO(230, 224, 233, 1),
+                  ),
+                ),
+              ]),
+            )),
+      );
+    } else {
+      return SizedBox.shrink();
+    }
   }
 }
