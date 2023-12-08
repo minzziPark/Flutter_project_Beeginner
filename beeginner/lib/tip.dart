@@ -20,136 +20,48 @@ class TipPage extends StatefulWidget {
 class _TipPageState extends State<TipPage> {
   final _tipContoroller = TextEditingController();
 
-  List<Card> _buildGridCards(BuildContext context, List<Tip> tips) {
-    var appState = context.watch<ApplicationState>();
-    if (tips.isEmpty) {
-      return const <Card>[];
-    }
-
-    return tips.map((tip) {
-      return Card(
-        color: Colors.transparent,
-        elevation: 0,
-        child: Stack(children: [
-          Container(
-            width: 380,
-            height: 66,
-            padding:
-                const EdgeInsets.only(top: 10, left: 15, right: 16, bottom: 20),
-            child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (tips.contains(tip))
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          tip.tipTitle,
-                          maxLines: 1,
-                          textAlign: TextAlign.start,
-                          style: const TextStyle(
-                            color: Color(0xFF1D1B20),
-                            fontSize: 15,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w600,
-                            height: 0.09,
-                            letterSpacing: 0.50,
-                          ),
-                        ),
-                        const SizedBox(height: 17.0),
-                        Text(
-                          tip.createTime != null
-                              ? DateFormat('yyyy.MM.dd')
-                                  .format(tip.createTime!.toDate())
-                              : 'N/A',
-                          // maxLines: 1,
-                          textAlign: TextAlign.start,
-                          style: const TextStyle(
-                            color: Color(0xFF1D1B20),
-                            fontSize: 12,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w300,
-                            height: 0.12,
-                            letterSpacing: 0.10,
-                          ),
-                        ),
-                      ],
-                    ),
-                  if (tip.star == true)
-                    InkWell(
-                      onTap: () async {
-                        if (tip.createTime != null) {
-                          try {
-                            DateTime createTimeDateTime =
-                                tip.createTime!.toDate();
-                            await FirebaseController.collection
-                                .doc(tip.id)
-                                .update({
-                              'tipTitle': tip.tipTitle,
-                              'star': !tip.star,
-                              'description': tip.description,
-                              'createTime': Timestamp.fromDate(
-                                  createTimeDateTime), // Convert to Timestamp
-                              // 나머지 필드도 필요한대로 업데이트해주세요.
-                            });
-                          } catch (e) {
-                            print("Error updating document: $e");
-                          }
-                        }
-                      },
-                      child: const Icon(
-                        Icons.star,
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        size: 23,
-                      ),
-                    ),
-                  if (tip.star == false)
-                    InkWell(
-                      onTap: () async {
-                        if (tip.createTime != null) {
-                          try {
-                            DateTime createTimeDateTime =
-                                tip.createTime!.toDate();
-                            await FirebaseController.collection
-                                .doc(tip.id)
-                                .update({
-                              'tipTitle': tip.tipTitle,
-                              'star': !tip.star,
-                              'description': tip.description,
-                              'createTime': Timestamp.fromDate(
-                                  createTimeDateTime), // Convert to Timestamp
-                              // 나머지 필드도 필요한대로 업데이트해주세요.
-                            });
-                          } catch (e) {
-                            print("Error updating document: $e");
-                          }
-                        }
-                      },
-                      child: const Icon(
-                        Icons.star_border_outlined,
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        size: 23,
-                      ),
-                    ),
-                ]),
+  void _showTipDetailsModal(BuildContext context, Tip tip) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(255, 255, 255, 1), // 배경색 설정
+            borderRadius: BorderRadius.circular(10.0), // radius 설정
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Divider(
-              height: 0.5,
-              thickness: 0.5,
-              color: Color.fromRGBO(230, 224, 233, 1),
-            ),
+          width: 380,
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                tip.tipTitle,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                '작성일: ${DateFormat('yyyy.MM.dd').format(tip.createTime!.toDate())}',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                tip.description,
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              // 원하는 다른 내용 추가 가능
+            ],
           ),
-        ]),
-      );
-    }).toList();
+        );
+      },
+    );
   }
 
   @override
@@ -352,9 +264,137 @@ class _TipPageState extends State<TipPage> {
           childAspectRatio: 6,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          children: _buildGridCards(context, tips),
+          children: tips.map((tip) => _buildCard(context, tip)).toList(),
         ),
       ]),
     );
+  }
+
+  Widget _buildCard(BuildContext context, Tip tip) {
+    return InkWell(
+        onTap: () {
+          _showTipDetailsModal(context, tip);
+        },
+        child: Card(
+          color: Color.fromARGB(0, 255, 255, 255),
+          elevation: 0,
+          child: Stack(children: [
+            Container(
+              width: 380,
+              height: 66,
+              padding: const EdgeInsets.only(
+                  top: 10, left: 15, right: 16, bottom: 20),
+              child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          tip.tipTitle,
+                          maxLines: 1,
+                          textAlign: TextAlign.start,
+                          style: const TextStyle(
+                            color: Color(0xFF1D1B20),
+                            fontSize: 15,
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w600,
+                            height: 0.09,
+                            letterSpacing: 0.50,
+                          ),
+                        ),
+                        const SizedBox(height: 17.0),
+                        Text(
+                          tip.createTime != null
+                              ? DateFormat('yyyy.MM.dd')
+                                  .format(tip.createTime!.toDate())
+                              : 'N/A',
+                          // maxLines: 1,
+                          textAlign: TextAlign.start,
+                          style: const TextStyle(
+                            color: Color(0xFF1D1B20),
+                            fontSize: 12,
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w300,
+                            height: 0.12,
+                            letterSpacing: 0.10,
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (tip.star == true)
+                      InkWell(
+                        onTap: () async {
+                          if (tip.createTime != null) {
+                            try {
+                              DateTime createTimeDateTime =
+                                  tip.createTime!.toDate();
+                              await FirebaseController.collection
+                                  .doc(tip.id)
+                                  .update({
+                                'tipTitle': tip.tipTitle,
+                                'star': !tip.star,
+                                'description': tip.description,
+                                'createTime': Timestamp.fromDate(
+                                    createTimeDateTime), // Convert to Timestamp
+                                // 나머지 필드도 필요한대로 업데이트해주세요.
+                              });
+                            } catch (e) {
+                              print("Error updating document: $e");
+                            }
+                          }
+                        },
+                        child: const Icon(
+                          Icons.star,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          size: 23,
+                        ),
+                      ),
+                    if (tip.star == false)
+                      InkWell(
+                        onTap: () async {
+                          if (tip.createTime != null) {
+                            try {
+                              DateTime createTimeDateTime =
+                                  tip.createTime!.toDate();
+                              await FirebaseController.collection
+                                  .doc(tip.id)
+                                  .update({
+                                'tipTitle': tip.tipTitle,
+                                'star': !tip.star,
+                                'description': tip.description,
+                                'createTime': Timestamp.fromDate(
+                                    createTimeDateTime), // Convert to Timestamp
+                                // 나머지 필드도 필요한대로 업데이트해주세요.
+                              });
+                            } catch (e) {
+                              print("Error updating document: $e");
+                            }
+                          }
+                        },
+                        child: const Icon(
+                          Icons.star_border_outlined,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          size: 23,
+                        ),
+                      ),
+                  ]),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Divider(
+                height: 0.5,
+                thickness: 0.5,
+                color: Color.fromRGBO(230, 224, 233, 1),
+              ),
+            ),
+          ]),
+        ));
   }
 }
