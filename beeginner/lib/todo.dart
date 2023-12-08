@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:timer_builder/timer_builder.dart';
-import 'package:provider/provider.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'model/todolist.dart';
-import 'package:beeginner/main.dart';
 
 class TodoPage extends StatefulWidget {
   const TodoPage({Key? key}) : super(key: key);
@@ -22,7 +20,6 @@ class _TodoPageState extends State<TodoPage> {
   bool isTextFieldFocused = false;
 
   List<Card> _buildGridCards(BuildContext context, List<Todo> todos) {
-    var appState = context.watch<ApplicationState>();
     if (todos.isEmpty) {
       return const <Card>[];
     }
