@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-class User {
+class Users {
   String? uid;
   late String email;
   late String password;
 
-  User({
+  Users({
     this.uid,
     required this.email,
     required this.password,
   });
 
-  User.fromJson(Map<String, dynamic> json) {
+  Users.fromJson(Map<String, dynamic> json) {
     fromJson(json);
   }
 
@@ -22,7 +22,7 @@ class User {
     password = json['password'];
   }
 
-  Map<String, dynamic> toJson(User user) => {
+  Map<String, dynamic> toJson(Users user) => {
         'uid': uid,
         'email': email,
         'password': password,
