@@ -5,11 +5,13 @@ class Todo {
   String? id;
   late String todoTitle;
   late bool checked;
+  String? uid;
 
   Todo({
     this.id,
     required this.todoTitle,
     required this.checked,
+    this.uid,
   });
 
   Todo.fromJson(Map<String, dynamic> json) {
@@ -20,11 +22,13 @@ class Todo {
     id = json['id'];
     todoTitle = json['todoTitle'];
     checked = json['checked'];
+    uid = json['uid'];
   }
 
   Map<String, dynamic> toJson(Todo todo) => {
         'id': id,
         'todoTitle': todoTitle,
         'checked': checked,
+        'uid': uid,
       };
 }
