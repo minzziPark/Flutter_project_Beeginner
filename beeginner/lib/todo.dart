@@ -410,11 +410,6 @@ class _TodoPageState extends State<TodoPage> {
             ),
           ),
         ),
-        // const Divider(
-        //   height: 0,
-        //   thickness: 0.5,
-        //   color: Color.fromRGBO(230, 224, 233, 1),
-        // ),
         Container(
           decoration: BoxDecoration(
             color: Color.fromRGBO(210, 210, 210, 0.28), // 배경색 설정
