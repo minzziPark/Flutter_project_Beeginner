@@ -19,6 +19,20 @@ class _SchedulePageState extends State<SchedulePage> {
   var _selectedDay;
   var _focusedDay = DateTime.now();
 
+  double _calculateProgressPercentage() {
+    // 현재 월의 총 일수를 계산
+    int totalDaysInMonth = DateTime(
+      _focusedDay.year,
+      _focusedDay.month + 1,
+      0,
+    ).day;
+
+    // 현재 날짜가 현재 월에서 몇 퍼센트 진행되었는지 계산
+    double progressPercentage = _focusedDay.day / totalDaysInMonth;
+
+    return progressPercentage;
+  }
+
   @override
   Widget build(BuildContext context) {
     Future<List<DateTime>> fetchDatesFromFirebase() async {
@@ -160,107 +174,111 @@ class _SchedulePageState extends State<SchedulePage> {
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            TimerBuilder.periodic(
-              const Duration(seconds: 1),
-              builder: (context) {
-                return Container(
-                  width: 242,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(255, 226, 12, 1), // 배경색 설정
-                    borderRadius: BorderRadius.circular(10.0), // radius 설정
-                  ),
-                  padding: const EdgeInsets.all(0.0), // 내부 여백 설정
-                  child: Center(
-                    child: Text(
-                      'Today    |    ${DateFormat('yyyy.MM.dd.EEE').format(DateTime.now())}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black, // 텍스트 색상 설정
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-            Container(
-              width: 380,
-              child: FutureBuilder<List<DateTime>>(
-                  future: fetchDatesFromFirebase(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Text('No data available');
-                    } else {
-                      return TableCalendar(
-                        focusedDay: _focusedDay,
-                        firstDay: DateTime(2020),
-                        lastDay: DateTime(2030),
-                        selectedDayPredicate: (day) {
-                          return snapshot.data!.any((date) =>
-                              DateFormat('yyyy-MM-dd').format(date) ==
-                              DateFormat('yyyy-MM-dd').format(day));
-                        },
-                        calendarStyle: const CalendarStyle(
-                          todayDecoration: BoxDecoration(
-                            color: Color(0x3F929292),
-                            shape: BoxShape.circle,
-                          ),
-                          todayTextStyle: TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            fontSize: 16.0,
-                          ),
-                          selectedDecoration: BoxDecoration(
-                            color: Color(0xFFA06C46), // 선택된 날짜의 배경색
-                            shape: BoxShape.circle, // 선택된 날짜의 모양
-                            // borderRadius: BorderRadius.circular(5.0), // 선택된 날짜의 모양 설정
-                          ),
-                        ),
-                      );
-                    }
-                  }),
-            ),
             Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: LinearPercentIndicator(
-                width: 390,
-                animation: true,
-                lineHeight: 20.0,
-                animationDuration: 2000,
-                percent: 0.38,
-                center: Text("38.8%"),
-                linearStrokeCap: LinearStrokeCap.roundAll,
-                progressColor: Color.fromRGBO(255, 226, 12, 1),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 10),
               child: Container(
-                width: 380,
-                height: 50,
+                width: 400,
+                height: 75,
                 decoration: ShapeDecoration(
-                  color: Color(0x47D2D2D2),
+                  color: Color.fromARGB(70, 192, 192, 192),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/add_schedule');
-                  },
-                  child: Container(
-                    width: 380,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(210, 210, 210, 0.28), // 배경색 설정
-                      borderRadius: BorderRadius.circular(10.0), // radius 설정
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 0),
+                      child: Text('이번 달도 이만큼 달려왔어요!🏃‍♀️ 남은 날도 파이팅🤠'),
                     ),
-                    child: Center(
-                      child: Text("+ 일정 추가하기"),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+                      child: LinearPercentIndicator(
+                        width: 390,
+                        animation: true,
+                        lineHeight: 20.0,
+                        animationDuration: 2000,
+                        percent: _calculateProgressPercentage(),
+                        center: Text(
+                            "${(_calculateProgressPercentage() * 100).toStringAsFixed(1)}%"),
+                        linearStrokeCap: LinearStrokeCap.roundAll,
+                        progressColor: Color.fromRGBO(255, 226, 12, 1),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              width: 380,
+              child: FutureBuilder<List<DateTime>>(
+                future: fetchDatesFromFirebase(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Text('No data available');
+                  } else {
+                    return TableCalendar(
+                      focusedDay: _focusedDay,
+                      firstDay: DateTime(2020),
+                      lastDay: DateTime(2030),
+                      selectedDayPredicate: (day) {
+                        return snapshot.data!.any((date) =>
+                            DateFormat('yyyy-MM-dd').format(date) ==
+                            DateFormat('yyyy-MM-dd').format(day));
+                      },
+                      calendarStyle: const CalendarStyle(
+                        todayDecoration: BoxDecoration(
+                          color: Color(0x3F929292),
+                          shape: BoxShape.circle,
+                        ),
+                        todayTextStyle: TextStyle(
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 16.0,
+                        ),
+                        selectedDecoration: BoxDecoration(
+                          color: Color(0xFFA06C46), // 선택된 날짜의 배경색
+                          shape: BoxShape.circle, // 선택된 날짜의 모양
+                          // borderRadius: BorderRadius.circular(5.0), // 선택된 날짜의 모양 설정
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Container(
+                  width: 380,
+                  height: 50,
+                  decoration: ShapeDecoration(
+                    color: Color(0x47D2D2D2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/add_schedule');
+                    },
+                    child: Container(
+                      width: 380,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(210, 210, 210, 0.28), // 배경색 설정
+                        borderRadius: BorderRadius.circular(10.0), // radius 설정
+                      ),
+                      child: Center(
+                        child: Text("+ 일정 추가하기"),
+                      ),
                     ),
                   ),
                 ),
