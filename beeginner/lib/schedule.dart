@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:timer_builder/timer_builder.dart';
 
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -222,6 +223,19 @@ class _SchedulePageState extends State<SchedulePage> {
                       );
                     }
                   }),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: LinearPercentIndicator(
+                width: 390,
+                animation: true,
+                lineHeight: 20.0,
+                animationDuration: 2000,
+                percent: 0.3,
+                center: Text("30.0%"),
+                linearStrokeCap: LinearStrokeCap.roundAll,
+                progressColor: Color.fromRGBO(255, 226, 12, 1),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(15.0),
