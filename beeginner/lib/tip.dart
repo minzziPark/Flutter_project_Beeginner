@@ -1,5 +1,6 @@
 import 'package:beeginner/controller/TipController.dart';
 import 'package:beeginner/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -18,7 +19,7 @@ class TipPage extends StatefulWidget {
 }
 
 class _TipPageState extends State<TipPage> {
-  final _tipContoroller = TextEditingController();
+  final currentUser = FirebaseAuth.instance.currentUser!.uid;
 
   void _showTipDetailsModal(BuildContext context, Tip tip) {
     showModalBottomSheet(
@@ -66,7 +67,11 @@ class _TipPageState extends State<TipPage> {
 
   @override
   Widget build(BuildContext context) {
-    snapshots() => FirebaseFirestore.instance.collection('tip').snapshots();
+    var appState = context.watch<ApplicationState>();
+    snapshots() => FirebaseFirestore.instance
+        .collection('tip')
+        .orderBy('star', descending: true)
+        .snapshots();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -76,12 +81,78 @@ class _TipPageState extends State<TipPage> {
         titleSpacing: 0,
         title: Column(
           children: [
-            Container(
-              width: 125,
-              child: SvgPicture.asset(
-                'assets/images/Beeginner.svg',
-                width: 125,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(width: 125),
+                Expanded(
+                  child: Container(
+                    width: 125,
+                    child: SvgPicture.asset(
+                      'assets/images/Beeginner.svg',
+                      width: 125,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 125,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 25.0, 0),
+                      child: InkWell(
+                        onTap: () {
+                          // 탭을 감지하여 로그아웃 확인 모달창 띄우기
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor:
+                                    Color.fromARGB(255, 255, 255, 255)
+                                        .withOpacity(1),
+                                title: Text(
+                                  '로그아웃',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                content: Text(
+                                  '정말 로그아웃하시겠습니까?',
+                                  style: TextStyle(
+                                      color: Color.fromARGB(255, 71, 71, 71)),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(); // 모달창 닫기
+                                    },
+                                    child: Text(
+                                      '취소',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      appState.changeLoggedIn(false);
+                                      Navigator.pushNamed(context, '/login');
+                                    },
+                                    child: Text(
+                                      '로그아웃',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: Icon(
+                          Icons.logout,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             Row(
               children: <Widget>[
@@ -271,7 +342,7 @@ class _TipPageState extends State<TipPage> {
   }
 
   Widget _buildCard(BuildContext context, Tip tip) {
-    if (tip.id != null) {
+    if (tip.id != null && tip.uid == currentUser) {
       return Dismissible(
         key: Key(tip.id!),
         onDismissed: (direction) async {
