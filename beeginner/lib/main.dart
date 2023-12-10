@@ -22,9 +22,14 @@ class ApplicationState extends ChangeNotifier {
   ApplicationState() {
     init();
   }
-
   bool _loggedIn = false;
   bool get loggedIn => _loggedIn;
+
+  void changeLoggedIn(bool isLogined) {
+    _loggedIn = isLogined;
+    notifyListeners();
+  }
+
   bool _emailVerified = false;
   bool get emailVerified => _emailVerified;
 
