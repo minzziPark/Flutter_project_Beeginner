@@ -1,9 +1,12 @@
 import 'package:beeginner/controller/ScheduleController.dart';
+import 'package:beeginner/main.dart';
 import 'package:beeginner/model/schedulelist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:timer_builder/timer_builder.dart';
 
 class AddSchedulePage extends StatefulWidget {
@@ -48,6 +51,7 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<ApplicationState>();
     DocumentReference<Map<String, dynamic>> tipRef;
     String documentId;
 
@@ -60,12 +64,78 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
           titleSpacing: 0,
           title: Column(
             children: [
-              Container(
-                width: 125,
-                child: SvgPicture.asset(
-                  'assets/images/Beeginner.svg',
-                  width: 125,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(width: 125),
+                  Expanded(
+                    child: Container(
+                      width: 125,
+                      child: SvgPicture.asset(
+                        'assets/images/Beeginner.svg',
+                        width: 125,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 125,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 25.0, 0),
+                        child: InkWell(
+                          onTap: () {
+                            // 탭을 감지하여 로그아웃 확인 모달창 띄우기
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor:
+                                      Color.fromARGB(255, 255, 255, 255)
+                                          .withOpacity(1),
+                                  title: Text(
+                                    '로그아웃',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  content: Text(
+                                    '정말 로그아웃하시겠습니까?',
+                                    style: TextStyle(
+                                        color: Color.fromARGB(255, 71, 71, 71)),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(); // 모달창 닫기
+                                      },
+                                      child: Text(
+                                        '취소',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        appState.changeLoggedIn(false);
+                                        Navigator.pushNamed(context, '/login');
+                                      },
+                                      child: Text(
+                                        '로그아웃',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Icon(
+                            Icons.logout,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Row(
                 children: <Widget>[
@@ -198,7 +268,7 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
               const SizedBox(height: 13.0),
               Container(
                 width: 380,
-                // height: 600,
+                height: 630,
                 decoration: BoxDecoration(
                   color: Color.fromRGBO(210, 210, 210, 0.28), // 배경색 설정
                   borderRadius: BorderRadius.circular(10.0), // radius 설정
@@ -407,6 +477,7 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
                             tipRef = await FirebaseFirestore.instance
                                 .collection('schedule')
                                 .add({
+                              'uid': FirebaseAuth.instance.currentUser!.uid,
                               'date': date,
                               'time': selectedTime,
                               'memo': _memoController.text,
@@ -415,16 +486,19 @@ class _AddSchedulePageState extends State<AddSchedulePage> {
                             ScheduleController.collection
                                 .doc(documentId)
                                 .update(Schedule(
-                                  id: documentId,
-                                  date: createTime,
-                                  time: selectedTime,
-                                  memo: _memoController.text,
-                                ).toJson(Schedule(
-                                  id: documentId,
-                                  date: createTime,
-                                  time: selectedTime,
-                                  memo: _memoController.text,
-                                )));
+                                        id: documentId,
+                                        date: createTime,
+                                        time: selectedTime,
+                                        memo: _memoController.text,
+                                        uid: FirebaseAuth
+                                            .instance.currentUser!.uid)
+                                    .toJson(Schedule(
+                                        id: documentId,
+                                        date: createTime,
+                                        time: selectedTime,
+                                        memo: _memoController.text,
+                                        uid: FirebaseAuth
+                                            .instance.currentUser!.uid)));
                           } catch (e) {
                             print("Error updating document: $e");
                           }
