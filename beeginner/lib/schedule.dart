@@ -1,9 +1,10 @@
-import 'package:beeginner/addschedule.dart';
+import 'package:beeginner/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:timer_builder/timer_builder.dart';
+import 'package:provider/provider.dart';
 
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -16,25 +17,22 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
-  var _selectedDay;
   var _focusedDay = DateTime.now();
 
   double _calculateProgressPercentage() {
-    // 현재 월의 총 일수를 계산
     int totalDaysInMonth = DateTime(
       _focusedDay.year,
       _focusedDay.month + 1,
       0,
     ).day;
-
-    // 현재 날짜가 현재 월에서 몇 퍼센트 진행되었는지 계산
     double progressPercentage = _focusedDay.day / totalDaysInMonth;
-
     return progressPercentage;
   }
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<ApplicationState>();
+    final currentUser = FirebaseAuth.instance.currentUser!.uid;
     Future<List<DateTime>> fetchDatesFromFirebase() async {
       List<DateTime> dateList = [];
 
@@ -44,11 +42,13 @@ class _SchedulePageState extends State<SchedulePage> {
 
         for (QueryDocumentSnapshot<Map<String, dynamic>> document
             in snapshot.docs) {
-          Timestamp timestamp = document['date'];
-          DateTime date = timestamp.toDate();
-          dateList.add(date);
+          if (document['uid'] == currentUser) {
+            Timestamp timestamp = document['date'];
+            DateTime date = timestamp.toDate();
+            dateList.add(date);
+          }
         }
-        print(dateList);
+        // print(dateList);
       } catch (e) {
         print("Error fetching dates from Firebase: $e");
       }
@@ -65,12 +65,78 @@ class _SchedulePageState extends State<SchedulePage> {
         titleSpacing: 0,
         title: Column(
           children: [
-            Container(
-              width: 125,
-              child: SvgPicture.asset(
-                'assets/images/Beeginner.svg',
-                width: 125,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(width: 125),
+                Expanded(
+                  child: Container(
+                    width: 125,
+                    child: SvgPicture.asset(
+                      'assets/images/Beeginner.svg',
+                      width: 125,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 125,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 25.0, 0),
+                      child: InkWell(
+                        onTap: () {
+                          // 탭을 감지하여 로그아웃 확인 모달창 띄우기
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor:
+                                    Color.fromARGB(255, 255, 255, 255)
+                                        .withOpacity(1),
+                                title: Text(
+                                  '로그아웃',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                content: Text(
+                                  '정말 로그아웃하시겠습니까?',
+                                  style: TextStyle(
+                                      color: Color.fromARGB(255, 71, 71, 71)),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(); // 모달창 닫기
+                                    },
+                                    child: Text(
+                                      '취소',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      appState.changeLoggedIn(false);
+                                      Navigator.pushNamed(context, '/login');
+                                    },
+                                    child: Text(
+                                      '로그아웃',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: Icon(
+                          Icons.logout,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             Row(
               children: <Widget>[
@@ -218,8 +284,6 @@ class _SchedulePageState extends State<SchedulePage> {
                     return CircularProgressIndicator();
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Text('No data available');
                   } else {
                     return TableCalendar(
                       focusedDay: _focusedDay,
@@ -244,6 +308,9 @@ class _SchedulePageState extends State<SchedulePage> {
                           shape: BoxShape.circle, // 선택된 날짜의 모양
                           // borderRadius: BorderRadius.circular(5.0), // 선택된 날짜의 모양 설정
                         ),
+                      ),
+                      headerStyle: const HeaderStyle(
+                        formatButtonVisible: false, // 이 버튼을 보이지 않게 합니다.
                       ),
                     );
                   }
