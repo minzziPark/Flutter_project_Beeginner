@@ -1,7 +1,9 @@
 import 'package:beeginner/controller/FirebaseController.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:timer_builder/timer_builder.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,8 +19,10 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
+  final currentUser = FirebaseAuth.instance.currentUser!.uid;
   final _todoController = TextEditingController();
   bool isTextFieldFocused = false;
+  int num = 1;
 
   List<Widget> _buildGridCards(BuildContext context, List<Todo> todos) {
     if (todos.isEmpty) {
@@ -26,7 +30,7 @@ class _TodoPageState extends State<TodoPage> {
     }
 
     return todos.map((todo) {
-      if (todo.id != null) {
+      if (todo.id != null && todo.uid == currentUser) {
         return Dismissible(
           key: Key(todo.id!),
           onDismissed: (direction) async {
@@ -119,10 +123,11 @@ class _TodoPageState extends State<TodoPage> {
                     InkWell(
                       onTap: () {
                         FirebaseController.collection.doc(todo.id).update(Todo(
-                                id: todo.id,
-                                todoTitle: todo.todoTitle,
-                                checked: !todo.checked)
-                            .toJson(todo));
+                              id: todo.id,
+                              todoTitle: todo.todoTitle,
+                              checked: !todo.checked,
+                              uid: FirebaseAuth.instance.currentUser!.uid,
+                            ).toJson(todo));
                       },
                       child: Container(
                         width: 24,
@@ -192,6 +197,7 @@ class _TodoPageState extends State<TodoPage> {
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<ApplicationState>();
     snapshots() => FirebaseFirestore.instance.collection('todo').snapshots();
 
     return Scaffold(
@@ -203,12 +209,78 @@ class _TodoPageState extends State<TodoPage> {
         titleSpacing: 0,
         title: Column(
           children: [
-            Container(
-              width: 125,
-              child: SvgPicture.asset(
-                'assets/images/Beeginner.svg',
-                width: 125,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(width: 125),
+                Expanded(
+                  child: Container(
+                    width: 125,
+                    child: SvgPicture.asset(
+                      'assets/images/Beeginner.svg',
+                      width: 125,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 125,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 25.0, 0),
+                      child: InkWell(
+                        onTap: () {
+                          // 탭을 감지하여 로그아웃 확인 모달창 띄우기
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor:
+                                    Color.fromARGB(255, 255, 255, 255)
+                                        .withOpacity(1),
+                                title: Text(
+                                  '로그아웃',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                content: Text(
+                                  '정말 로그아웃하시겠습니까?',
+                                  style: TextStyle(
+                                      color: Color.fromARGB(255, 71, 71, 71)),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(); // 모달창 닫기
+                                    },
+                                    child: Text(
+                                      '취소',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      appState.changeLoggedIn(false);
+                                      Navigator.pushNamed(context, '/login');
+                                    },
+                                    child: Text(
+                                      '로그아웃',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: Icon(
+                          Icons.logout,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             Row(
               children: <Widget>[
@@ -505,17 +577,21 @@ class _TodoPageState extends State<TodoPage> {
                             .add({
                           'todoTitle': _todoController.text,
                           'checked': false,
+                          'uid': FirebaseAuth.instance.currentUser!.uid,
                         });
                         documentId = todoRef.id;
                         FirebaseController.collection.doc(documentId).update(
                             Todo(
                                     id: documentId,
                                     todoTitle: _todoController.text,
-                                    checked: false)
+                                    checked: false,
+                                    uid: FirebaseAuth.instance.currentUser!.uid)
                                 .toJson(Todo(
                                     id: documentId,
                                     todoTitle: _todoController.text,
-                                    checked: false)));
+                                    checked: false,
+                                    uid: FirebaseAuth
+                                        .instance.currentUser!.uid)));
                         _todoController.text = '';
                       },
                       child: Container(
