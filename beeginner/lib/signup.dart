@@ -1,11 +1,13 @@
 import 'package:beeginner/controller/UserController.dart';
 import 'package:beeginner/login.dart';
+import 'package:beeginner/main.dart';
 import 'package:beeginner/model/userlist.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -40,8 +42,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<ApplicationState>();
     DocumentReference<Map<String, dynamic>> userRef;
-    String documentId;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -173,6 +175,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                     validator: _validatePassword,
+                    obscureText: true,
                   ),
                 ),
               ),
@@ -194,18 +197,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       userRef = await FirebaseFirestore.instance
                           .collection('user')
                           .add({
+                        'uid': FirebaseAuth.instance.currentUser!.uid,
                         'email': _emailContoroller.text,
                         'password': _passwordContoroller.text
                       });
-                      documentId = userRef.id;
-                      UserController.collection.doc(documentId).update(Users(
-                              uid: documentId,
-                              email: _emailContoroller.text,
-                              password: _passwordContoroller.text)
-                          .toJson(Users(
-                              uid: documentId,
-                              email: _emailContoroller.text,
-                              password: _passwordContoroller.text)));
                     } on FirebaseAuthException catch (error) {
                       // logger.e(error.code);
                       String? _errorCode;
@@ -230,6 +225,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       context,
                       MaterialPageRoute(builder: (context) => LoginPage()),
                     );
+                    appState.changeLoggedIn(true);
                   }
                 },
                 child: Container(
